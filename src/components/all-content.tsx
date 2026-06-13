@@ -11,6 +11,8 @@ export function AllContent({ sections }: { sections: RenderedCategory[] }) {
   const { selected, toggle } = usePlatforms();
 
   useEffect(() => {
+    if (selected.length === 0) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -33,7 +35,7 @@ export function AllContent({ sections }: { sections: RenderedCategory[] }) {
       .forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, []);
+  }, [selected.length]);
 
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">

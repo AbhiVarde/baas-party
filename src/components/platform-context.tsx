@@ -7,6 +7,7 @@ type PlatformContextType = {
   selected: string[];
   toggle: (id: string) => void;
   clear: () => void;
+  selectDefaults: () => void;
 };
 
 const PlatformContext = createContext<PlatformContextType | null>(null);
@@ -28,8 +29,14 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
     setSelected([]);
   }
 
+  function selectDefaults() {
+    setSelected(platforms.slice(0, 2).map((p) => p.id));
+  }
+
   return (
-    <PlatformContext.Provider value={{ selected, toggle, clear }}>
+    <PlatformContext.Provider
+      value={{ selected, toggle, clear, selectDefaults }}
+    >
       {children}
     </PlatformContext.Provider>
   );
@@ -37,8 +44,7 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
 
 export function usePlatforms() {
   const ctx = useContext(PlatformContext);
-  if (!ctx) {
+  if (!ctx)
     throw new Error("usePlatforms must be used within PlatformProvider");
-  }
   return ctx;
 }

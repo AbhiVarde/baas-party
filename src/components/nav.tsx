@@ -10,7 +10,32 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { usePlatforms } from "@/components/platform-context";
 import type { NavItem } from "@/lib/nav";
+
+function useActiveSection(hasSelection: boolean) {
+  const [activeId, setActiveId] = useState("");
+
+  useEffect(() => {
+    if (!hasSelection) {
+      setActiveId("");
+      return;
+    }
+
+    const hash = window.location.hash.slice(1);
+    if (hash) setActiveId(hash);
+
+    function handleSectionChange(e: Event) {
+      setActiveId((e as CustomEvent<string>).detail);
+    }
+
+    window.addEventListener("sectionchange", handleSectionChange);
+    return () =>
+      window.removeEventListener("sectionchange", handleSectionChange);
+  }, [hasSelection]);
+
+  return activeId;
+}
 
 function NavLinks({
   nav,
@@ -21,6 +46,7 @@ function NavLinks({
   activeId: string;
   onNavigate?: () => void;
 }) {
+  const { selected, selectDefaults } = usePlatforms();
   const activeRef = useRef<HTMLAnchorElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -32,6 +58,11 @@ function NavLinks({
       });
     }
   }, [activeId]);
+
+  function handleClick() {
+    if (selected.length === 0) selectDefaults();
+    onNavigate?.();
+  }
 
   return (
     <nav ref={containerRef} className="flex flex-col gap-6">
@@ -58,7 +89,7 @@ function NavLinks({
                     <a
                       href={`#${id}`}
                       ref={active ? activeRef : undefined}
-                      onClick={onNavigate}
+                      onClick={handleClick}
                       className={cn(
                         "block cursor-pointer rounded-md px-2 py-1.5 text-sm transition-colors",
                         active
@@ -79,27 +110,9 @@ function NavLinks({
   );
 }
 
-function useActiveSection() {
-  const [activeId, setActiveId] = useState("");
-
-  useEffect(() => {
-    const hash = window.location.hash.slice(1);
-    if (hash) setActiveId(hash);
-
-    function handleSectionChange(e: Event) {
-      setActiveId((e as CustomEvent<string>).detail);
-    }
-
-    window.addEventListener("sectionchange", handleSectionChange);
-    return () =>
-      window.removeEventListener("sectionchange", handleSectionChange);
-  }, []);
-
-  return activeId;
-}
-
 export function Sidebar({ nav }: { nav: NavItem[] }) {
-  const activeId = useActiveSection();
+  const { selected } = usePlatforms();
+  const activeId = useActiveSection(selected.length > 0);
 
   return (
     <aside className="sticky top-0 hidden h-screen w-56 shrink-0 self-start overflow-y-auto border-r border-border px-4 py-6 scrollbar-hide lg:block">
@@ -110,7 +123,8 @@ export function Sidebar({ nav }: { nav: NavItem[] }) {
 
 export function MobileNav({ nav }: { nav: NavItem[] }) {
   const [open, setOpen] = useState(false);
-  const activeId = useActiveSection();
+  const { selected } = usePlatforms();
+  const activeId = useActiveSection(selected.length > 0);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
