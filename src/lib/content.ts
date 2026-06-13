@@ -27,7 +27,9 @@ function getLanguageFromFilename(filename: string): string {
     tsx: "tsx",
     js: "javascript",
     jsx: "jsx",
+    sql: "sql",
   };
+
   return map[ext] ?? "typescript";
 }
 
