@@ -1,27 +1,43 @@
-import Link from "next/link";
-import { getNav } from "@/lib/nav";
+import { getCategories, getTasks, getSnippets } from "@/lib/content";
+import { getPlatformById } from "@/lib/platforms";
+import { CodeBlock } from "@/components/code-block";
+import { AllContent } from "@/components/all-content";
+import type { CategorySection, TaskBlock } from "@/lib/types";
 
-export default function Home() {
-  const nav = getNav();
-  const firstCategory = nav[0];
-  const firstTask = firstCategory?.tasks[0];
+export default async function Home() {
+  const categories = getCategories();
 
-  return (
-    <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-5xl flex-col items-center justify-center gap-4 px-6 text-center">
-      <span className="text-5xl">🎉</span>
-      <h1 className="text-3xl font-semibold tracking-tight">BaaS Party</h1>
-      <p className="max-w-md text-base text-muted-foreground">
-        Compare Supabase, Appwrite, and Convex syntax side by side — real code,
-        real tasks.
-      </p>
-      {firstCategory && firstTask && (
-        <Link
-          href={`/${firstCategory.slug}/${firstTask.slug}`}
-          className="mt-2 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity cursor-pointer hover:opacity-90"
-        >
-          Browse snippets →
-        </Link>
-      )}
-    </div>
+  const sections: CategorySection[] = await Promise.all(
+    categories.map(async (category) => {
+      const tasks = getTasks(category.slug);
+      const taskSections = await Promise.all(
+        tasks.map(async (task) => {
+          const snippets = getSnippets(category.slug, task.slug);
+          const blocks: TaskBlock[] = (
+            await Promise.all(
+              snippets.map(async (snippet) => {
+                const platform = getPlatformById(snippet.platformId);
+                if (!platform) return null;
+                return {
+                  platform,
+                  node: (
+                    <CodeBlock
+                      code={snippet.code}
+                      language={snippet.language}
+                      filename={snippet.filename}
+                    />
+                  ),
+                };
+              }),
+            )
+          ).filter((b): b is TaskBlock => b !== null);
+
+          return { task, blocks };
+        }),
+      );
+      return { category, taskSections };
+    }),
   );
+
+  return <AllContent sections={sections} />;
 }

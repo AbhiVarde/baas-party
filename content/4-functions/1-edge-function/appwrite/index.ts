@@ -1,4 +1,3 @@
-// functions/hello/src/main.ts
 import { Client } from "node-appwrite";
 
 export default async ({ req, res, log }) => {
