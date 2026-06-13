@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      { hostname: "supabase.com" },
+      { hostname: "appwrite.io" },
+      { hostname: "www.convex.dev" },
+    ],
+  },
 };
 
 export default nextConfig;

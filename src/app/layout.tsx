@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { Header } from "@/components/header";
+import { ThemeProvider } from "@/components/theme";
+import { Sidebar } from "@/components/nav";
+import { getNav } from "@/lib/nav";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -23,12 +27,25 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const nav = getNav();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TooltipProvider>{children}</TooltipProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TooltipProvider>
+            <Header nav={nav} />
+            <Sidebar nav={nav} />
+            <main className="pt-14 lg:pl-56">{children}</main>
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

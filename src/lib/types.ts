@@ -2,6 +2,7 @@ export type Platform = {
   id: string;
   name: string;
   color: string;
+  logo: string;
   docsUrl: string;
 };
 
