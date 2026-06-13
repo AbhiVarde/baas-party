@@ -1,5 +1,3 @@
-import type { ReactNode } from "react";
-
 export type Platform = {
   id: string;
   name: string;
@@ -32,17 +30,20 @@ export type TaskWithSnippets = Task & {
   snippets: Snippet[];
 };
 
-export type TaskBlock = {
-  platform: Platform;
-  node: ReactNode;
+export type RenderedSnippet = {
+  platformId: string;
+  filename: string;
+  code: string;
+  highlightedHtml: string;
+  editUrl: string;
 };
 
-export type TaskSection = {
+export type RenderedTask = {
   task: Task;
-  blocks: TaskBlock[];
+  snippets: RenderedSnippet[];
 };
 
-export type CategorySection = {
+export type RenderedCategory = {
   category: Category;
-  taskSections: TaskSection[];
+  tasks: RenderedTask[];
 };

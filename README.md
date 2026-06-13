@@ -2,27 +2,66 @@
 
 > Backend-as-a-Service syntax comparison by example.
 
-Compare how **Supabase**, **Appwrite**, and **Convex** handle the same backend tasks — side by side, with real code.
+Compare how **Supabase**, **Appwrite**, and **Convex** handle the same backend tasks, side by side, with real code. Pick your platforms, see the syntax instantly.
 
-Inspired by [component-party.dev](https://component-party.dev).
+Live at **[baas-party.vercel.app](https://baas-party.vercel.app)**
+
+Inspired by [component-party.dev](https://component-party.dev) · Built by [abhivarde.in](https://abhivarde.in)
+
+## What's inside
+
+| Category       | Tasks                                                               |
+| -------------- | ------------------------------------------------------------------- |
+| Authentication | Email signup, Email login, OAuth login, Sign out                    |
+| Database       | Insert record, Query with filter, Pagination, Realtime subscription |
+| Storage        | File upload, Get file URL                                           |
+| Functions      | Edge function                                                       |
+| Security       | Row level security                                                  |
 
 ## Stack
 
-- Next.js 16
-- TypeScript
-- Tailwind CSS v4
-- shadcn/ui
-- Shiki
+- [Next.js 16](https://nextjs.org) (App Router, server components, static generation)
+- [TypeScript](https://typescriptlang.org)
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [shadcn/ui](https://ui.shadcn.com)
+- [Shiki](https://shiki.style) (syntax highlighting)
 
-## Status
+## How it works
 
-Work in progress. Coming soon.
+Snippets live as real files in `content/`. The folder structure drives the sidebar and page layout automatically, no config needed.
+
+```
+
+content/
+└── 1-authentication/
+└── 1-email-signup/
+├── supabase/index.ts
+├── appwrite/index.ts
+└── convex/index.ts
+
+```
 
 ## Contributing
 
-Snippets live in the `content/` folder. Each platform has its own file per task.
-PRs welcome once the site is live.
+Found an outdated snippet? Want to add a new platform or task?
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full guide.
+
+Short version:
+
+- Fix outdated snippet: branch `fix/<platform>-<task>`
+- Add new task: branch `task/<category>-<task>`
+- Add new platform: branch `platform/<name>`
+
+## Running locally
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Open [localhost:3000](http://localhost:3000).
 
 ## License
 
-MIT
+MIT © [Abhi Varde](https://abhivarde.in)

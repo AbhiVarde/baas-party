@@ -62,7 +62,7 @@ function NavLinks({
                       className={cn(
                         "block cursor-pointer rounded-md px-2 py-1.5 text-sm transition-colors",
                         active
-                          ? "bg-accent font-medium text-accent-foreground"
+                          ? "bg-accent text-accent-foreground [text-shadow:0_0_0.6px_currentColor]"
                           : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
                       )}
                     >
@@ -102,7 +102,7 @@ export function Sidebar({ nav }: { nav: NavItem[] }) {
   const activeId = useActiveSection();
 
   return (
-    <aside className="fixed left-0 top-14 hidden h-[calc(100vh-3.5rem)] w-56 overflow-y-auto border-r border-border px-4 py-6 scrollbar-hide lg:block">
+    <aside className="sticky top-0 hidden h-screen w-56 shrink-0 self-start overflow-y-auto border-r border-border px-4 py-6 scrollbar-hide lg:block">
       <NavLinks nav={nav} activeId={activeId} />
     </aside>
   );

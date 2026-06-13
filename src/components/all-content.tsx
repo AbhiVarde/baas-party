@@ -1,25 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { PlatformLogo } from "@/components/code-block";
-import { platforms } from "@/lib/platforms";
-import type { CategorySection } from "@/lib/types";
+import { PlatformLogo, CodeBlock } from "@/components/code-block";
+import { platforms, getPlatformById } from "@/lib/platforms";
+import { usePlatforms } from "@/components/platform-context";
+import type { RenderedCategory } from "@/lib/types";
 
-export function AllContent({ sections }: { sections: CategorySection[] }) {
-  const [selected, setSelected] = useState<string[]>(
-    platforms.slice(0, 2).map((p) => p.id),
-  );
-
-  function toggle(id: string) {
-    setSelected((prev) => {
-      if (prev.includes(id)) {
-        return prev.length > 1 ? prev.filter((p) => p !== id) : prev;
-      }
-      if (prev.length < 2) return [...prev, id];
-      return [...prev.slice(1), id];
-    });
-  }
+export function AllContent({ sections }: { sections: RenderedCategory[] }) {
+  const { selected, toggle } = usePlatforms();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -47,8 +36,8 @@ export function AllContent({ sections }: { sections: CategorySection[] }) {
   }, []);
 
   return (
-    <>
-      <div className="sticky top-14 z-10 border-b border-border bg-background/95 backdrop-blur-sm">
+    <div className="flex min-h-[calc(100vh-3.5rem)] flex-col">
+      <div className="sticky top-0 z-10 border-b border-border bg-background/95 backdrop-blur-sm">
         <div className="mx-auto flex max-w-5xl gap-2 overflow-x-auto px-6 py-2.5 scrollbar-hide">
           {platforms.map((platform) => {
             const active = selected.includes(platform.id);
@@ -71,59 +60,111 @@ export function AllContent({ sections }: { sections: CategorySection[] }) {
         </div>
       </div>
 
-      <div className="mx-auto max-w-5xl px-6 py-10">
-        {sections.map(({ category, taskSections }) => (
-          <div key={category.slug} className="mb-20">
-            <h2 className="mb-10 text-2xl font-bold tracking-tight">
-              {category.label}
-            </h2>
-            <div className="flex flex-col gap-16">
-              {taskSections.map(({ task, blocks }) => {
-                const id = `${category.slug}-${task.slug}`;
-                const visible = blocks.filter((b) =>
-                  selected.includes(b.platform.id),
-                );
+      {selected.length === 0 ? (
+        <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 text-center">
+          <span className="text-5xl">🎉</span>
+          <h1 className="mt-4 text-2xl font-semibold tracking-tight sm:text-3xl">
+            What is BaaS Party?
+          </h1>
+          <p className="mt-3 max-w-2xl text-muted-foreground">
+            BaaS Party shows side-by-side code snippets for the same task across
+            Supabase, Appwrite, and Convex. Pick one or two platforms above and
+            compare auth, database, storage, and functions syntax instantly.
+          </p>
+        </div>
+      ) : (
+        <div className="mx-auto max-w-5xl px-6 py-4">
+          {sections.map(({ category, tasks }) => (
+            <div key={category.slug} className="mb-10">
+              <h2 className="mb-3 text-xl font-semibold tracking-tight">
+                {category.label}
+              </h2>
+              <div className="flex flex-col gap-16">
+                {tasks.map(({ task, snippets }, idx) => {
+                  const id = `${category.slug}-${task.slug}`;
+                  const visible = snippets.filter((s) =>
+                    selected.includes(s.platformId),
+                  );
 
-                return (
-                  <div
-                    key={task.slug}
-                    id={id}
-                    data-section={id}
-                    className="scroll-mt-28"
-                  >
-                    <h3 className="mb-6 text-lg font-semibold tracking-tight">
-                      {task.label}
-                    </h3>
+                  return (
                     <div
+                      key={task.slug}
+                      id={id}
+                      data-section={id}
                       className={cn(
-                        "grid gap-6",
-                        visible.length === 1
-                          ? "grid-cols-1"
-                          : "grid-cols-1 xl:grid-cols-2",
+                        "scroll-mt-28",
+                        idx > 0 && "border-t border-border pt-16",
                       )}
                     >
-                      {visible.map(({ platform, node }) => (
-                        <div
-                          key={platform.id}
-                          className="flex min-w-0 flex-col gap-2"
-                        >
-                          <div className="flex items-center gap-2">
-                            <PlatformLogo platform={platform} />
-                            <span className="text-sm font-medium">
-                              {platform.name}
-                            </span>
-                          </div>
-                          {node}
-                        </div>
-                      ))}
+                      <h3 className="mb-6 text-lg font-medium tracking-tight">
+                        {task.label}
+                      </h3>
+                      <div
+                        className={cn(
+                          "grid gap-6",
+                          visible.length === 1
+                            ? "grid-cols-1"
+                            : "grid-cols-1 xl:grid-cols-2",
+                        )}
+                      >
+                        {visible.map((snippet) => {
+                          const platform = getPlatformById(snippet.platformId);
+                          if (!platform) return null;
+                          return (
+                            <div
+                              key={snippet.platformId}
+                              className="flex min-w-0 flex-col gap-2"
+                            >
+                              <div className="flex items-center gap-2">
+                                <PlatformLogo platform={platform} />
+                                <span className="text-sm font-medium">
+                                  {platform.name}
+                                </span>
+                              </div>
+                              <CodeBlock
+                                highlightedHtml={snippet.highlightedHtml}
+                                code={snippet.code}
+                                filename={snippet.filename}
+                                editUrl={snippet.editUrl}
+                              />
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-    </>
+          ))}
+        </div>
+      )}
+
+      <footer className="mt-auto border-t border-border py-6">
+        <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-2 px-6 text-xs text-muted-foreground sm:flex-row">
+          <p>
+            Built by{" "}
+            <a
+              href="https://abhivarde.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 transition-colors hover:text-foreground"
+            >
+              abhivarde.in
+            </a>
+            {" · "}Inspired by{" "}
+            <a
+              href="https://component-party.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-4 transition-colors hover:text-foreground"
+            >
+              component-party.dev
+            </a>
+          </p>
+          <p>Snippets verified against official docs · June 2026</p>
+        </div>
+      </footer>
+    </div>
   );
 }

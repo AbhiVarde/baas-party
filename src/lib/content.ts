@@ -4,6 +4,7 @@ import type { Category, Task, Snippet, TaskWithSnippets } from "./types";
 import { platforms } from "./platforms";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
+const GITHUB_BASE = "https://github.com/AbhiVarde/baas-party/tree/main/content";
 
 function parseDir(dirName: string): { order: number; slug: string } {
   const [orderStr, ...rest] = dirName.split("-");
@@ -29,7 +30,6 @@ function getLanguageFromFilename(filename: string): string {
     jsx: "jsx",
     sql: "sql",
   };
-
   return map[ext] ?? "typescript";
 }
 
@@ -99,6 +99,27 @@ export function getSnippets(categorySlug: string, taskSlug: string): Snippet[] {
     const bIndex = platforms.findIndex((p) => p.id === b.platformId);
     return aIndex - bIndex;
   });
+}
+
+export function getEditUrl(
+  categorySlug: string,
+  taskSlug: string,
+  platformId: string,
+  filename: string,
+): string {
+  const categoryDir = fs
+    .readdirSync(CONTENT_DIR)
+    .find((n) => n.endsWith(`-${categorySlug}`));
+
+  if (!categoryDir) return "";
+
+  const taskDir = fs
+    .readdirSync(path.join(CONTENT_DIR, categoryDir))
+    .find((n) => n.endsWith(`-${taskSlug}`));
+
+  if (!taskDir) return "";
+
+  return `${GITHUB_BASE}/${categoryDir}/${taskDir}/${platformId}/${filename}`;
 }
 
 export function getTaskWithSnippets(

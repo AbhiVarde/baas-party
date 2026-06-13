@@ -7,7 +7,11 @@ import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <NextThemesProvider enableColorScheme={false} {...props}>
+      {children}
+    </NextThemesProvider>
+  );
 }
 
 export function ThemeToggle() {
