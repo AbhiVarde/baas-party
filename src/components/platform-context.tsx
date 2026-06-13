@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { platforms } from "@/lib/platforms";
 
 type PlatformContextType = {
@@ -16,6 +16,32 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
   const [selected, setSelected] = useState<string[]>(
     platforms.slice(0, 2).map((p) => p.id),
   );
+  const didInit = useRef(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("platforms")) {
+      const value = params.get("platforms") ?? "";
+      if (value === "") {
+        setSelected([]);
+      } else {
+        const ids = value
+          .split(",")
+          .filter((id) => platforms.find((p) => p.id === id));
+        setSelected(
+          ids.length > 0 ? ids : platforms.slice(0, 2).map((p) => p.id),
+        );
+      }
+    }
+    didInit.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!didInit.current) return;
+    const url = new URL(window.location.href);
+    url.searchParams.set("platforms", selected.join(","));
+    window.history.replaceState(null, "", url.toString());
+  }, [selected]);
 
   function toggle(id: string) {
     setSelected((prev) => {

@@ -19,7 +19,9 @@ export function AllContent({ sections }: { sections: RenderedCategory[] }) {
           if (entry.isIntersecting) {
             const id = entry.target.getAttribute("data-section");
             if (id) {
-              history.replaceState(null, "", `#${id}`);
+              const url = new URL(window.location.href);
+              url.hash = id;
+              window.history.replaceState(null, "", url.toString());
               window.dispatchEvent(
                 new CustomEvent("sectionchange", { detail: id }),
               );
