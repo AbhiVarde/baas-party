@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import type { Category, Task, Snippet, TaskWithSnippets } from "./types";
+import { platforms } from "./platforms";
 
 const CONTENT_DIR = path.join(process.cwd(), "content");
 
@@ -91,7 +92,11 @@ export function getSnippets(categorySlug: string, taskSlug: string): Snippet[] {
     }
   }
 
-  return snippets;
+  return snippets.sort((a, b) => {
+    const aIndex = platforms.findIndex((p) => p.id === a.platformId);
+    const bIndex = platforms.findIndex((p) => p.id === b.platformId);
+    return aIndex - bIndex;
+  });
 }
 
 export function getTaskWithSnippets(
