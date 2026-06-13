@@ -1,26 +1,30 @@
+"use client";
+
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
+import { Star } from "lucide-react";
 import { MobileNav } from "@/components/nav";
 import { ThemeToggle } from "@/components/theme";
+import { usePlatforms } from "@/components/platform-context";
+import { formatStars } from "@/lib/github";
 import type { NavItem } from "@/lib/nav";
 
-export function Header({ nav }: { nav: NavItem[] }) {
+export function Header({ nav, stars }: { nav: NavItem[]; stars: number }) {
+  const { clear } = usePlatforms();
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-14 border-b border-border bg-background/80 backdrop-blur-sm">
+    <header className="h-14 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="flex h-full items-center justify-between gap-2 px-4 lg:px-6">
         <div className="flex items-center gap-1">
           <MobileNav nav={nav} />
           <Link
             href="/"
-            className="flex items-center gap-2 cursor-pointer pl-1"
+            onClick={clear}
+            className="flex cursor-pointer items-center gap-2 pl-1"
           >
             <span className="text-lg">🎉</span>
             <span className="text-base font-semibold tracking-tight">
               BaaS Party
             </span>
-            <Badge variant="secondary" className="h-5 text-xs">
-              beta
-            </Badge>
           </Link>
         </div>
         <div className="flex items-center gap-1">
@@ -29,7 +33,7 @@ export function Header({ nav }: { nav: NavItem[] }) {
             href="https://github.com/AbhiVarde/baas-party"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors cursor-pointer hover:bg-accent/50 hover:text-foreground"
+            className="flex cursor-pointer items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground"
           >
             <svg
               viewBox="0 0 16 16"
@@ -43,7 +47,12 @@ export function Header({ nav }: { nav: NavItem[] }) {
                 fill="currentColor"
               />
             </svg>
-            <span className="hidden sm:inline">GitHub</span>
+            {stars > 0 && (
+              <span className="hidden items-center gap-0.5 sm:flex">
+                <Star className="h-3 w-3 fill-current" />
+                {formatStars(stars)}
+              </span>
+            )}
           </Link>
         </div>
       </div>
