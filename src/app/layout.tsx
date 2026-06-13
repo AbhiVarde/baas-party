@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme";
 import { Sidebar } from "@/components/nav";
 import { getNav } from "@/lib/nav";
 import "./globals.css";
+import { Footer } from "@/components/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,7 +44,10 @@ export default function RootLayout({
           <TooltipProvider>
             <Header nav={nav} />
             <Sidebar nav={nav} />
-            <main className="pt-14 lg:pl-56">{children}</main>
+            <main className="pt-14 lg:pl-56 flex flex-col min-h-[calc(100vh-3.5rem)]">
+              <div className="flex-1">{children}</div>
+              <Footer />
+            </main>
           </TooltipProvider>
         </ThemeProvider>
       </body>
