@@ -53,7 +53,6 @@ export function Header({ nav, stars }: { nav: NavItem[]; stars: number }) {
                 fill="currentColor"
               />
             </svg>
-            <span className="hidden sm:inline">GitHub</span>
             {stars > 0 && (
               <span className="hidden items-center gap-0.5 sm:flex">
                 <Star className="h-3 w-3 fill-current" />
