@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "baas-party": {
+      "source": "AbhiVarde/baas-party",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "fa4552b2003bd200499fb9b636884b5d4bd19d0e0efe90fa7e8aab93e5b264ef"
+    }
+  }
+}
