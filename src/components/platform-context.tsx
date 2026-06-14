@@ -40,6 +40,7 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
     if (!didInit.current) return;
     const url = new URL(window.location.href);
     url.searchParams.set("platforms", selected.join(","));
+    if (selected.length === 0) url.hash = "";
     window.history.replaceState(null, "", url.toString());
   }, [selected]);
 

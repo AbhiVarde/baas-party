@@ -11,21 +11,27 @@ import type { NavItem } from "@/lib/nav";
 export function Header({ nav, stars }: { nav: NavItem[]; stars: number }) {
   const { clear } = usePlatforms();
 
+  function handleLogoClick(e: React.MouseEvent) {
+    e.preventDefault();
+    clear();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   return (
     <header className="h-14 border-b border-border bg-background/80 backdrop-blur-sm">
       <div className="flex h-full items-center justify-between gap-2 px-4 lg:px-6">
         <div className="flex items-center gap-1">
           <MobileNav nav={nav} />
-          <Link
+          <a
             href="/"
-            onClick={clear}
+            onClick={handleLogoClick}
             className="flex cursor-pointer items-center gap-2 pl-1"
           >
             <span className="text-lg">🎉</span>
             <span className="text-base font-semibold tracking-tight">
               BaaS Party
             </span>
-          </Link>
+          </a>
         </div>
         <div className="flex items-center gap-1">
           <ThemeToggle />
@@ -47,6 +53,7 @@ export function Header({ nav, stars }: { nav: NavItem[]; stars: number }) {
                 fill="currentColor"
               />
             </svg>
+            <span className="hidden sm:inline">GitHub</span>
             {stars > 0 && (
               <span className="hidden items-center gap-0.5 sm:flex">
                 <Star className="h-3 w-3 fill-current" />
