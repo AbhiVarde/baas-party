@@ -13,9 +13,8 @@ type PlatformContextType = {
 const PlatformContext = createContext<PlatformContextType | null>(null);
 
 export function PlatformProvider({ children }: { children: React.ReactNode }) {
-  const [selected, setSelected] = useState<string[]>(
-    platforms.slice(0, 2).map((p) => p.id),
-  );
+  const [selected, setSelected] = useState<string[]>([]);
+  const [hydrated, setHydrated] = useState(false);
   const didInit = useRef(false);
 
   useEffect(() => {
@@ -32,8 +31,11 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
           ids.length > 0 ? ids : platforms.slice(0, 2).map((p) => p.id),
         );
       }
+    } else {
+      setSelected(platforms.slice(0, 2).map((p) => p.id));
     }
     didInit.current = true;
+    setHydrated(true);
   }, []);
 
   useEffect(() => {
@@ -64,7 +66,7 @@ export function PlatformProvider({ children }: { children: React.ReactNode }) {
     <PlatformContext.Provider
       value={{ selected, toggle, clear, selectDefaults }}
     >
-      {children}
+      {hydrated ? children : null}
     </PlatformContext.Provider>
   );
 }

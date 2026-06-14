@@ -2,11 +2,43 @@
 
 import Link from "next/link";
 import { Star } from "lucide-react";
+import { Copy, Check } from "lucide-react";
+import { useState } from "react";
 import { MobileNav } from "@/components/nav";
 import { ThemeToggle } from "@/components/theme";
 import { usePlatforms } from "@/components/platform-context";
 import { formatStars } from "@/lib/github";
 import type { NavItem } from "@/lib/nav";
+
+const SKILL_CMD = "npx skills add AbhiVarde/baas-party";
+
+function SkillBadge() {
+  const [copied, setCopied] = useState(false);
+
+  async function handleCopy() {
+    await navigator.clipboard.writeText(SKILL_CMD);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="hidden items-center gap-1.5 rounded-md border border-border bg-muted/40 px-2 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-accent/50 hover:text-foreground lg:flex"
+    >
+      <span className="font-mono">skills.sh</span>
+      <span className="text-border">·</span>
+      <span className="font-mono text-foreground/70 max-w-45 truncate">
+        {SKILL_CMD.replace("npx skills add ", "")}
+      </span>
+      {copied ? (
+        <Check className="h-3 w-3 shrink-0 text-green-500" />
+      ) : (
+        <Copy className="h-3 w-3 shrink-0" />
+      )}
+    </button>
+  );
+}
 
 export function Header({ nav, stars }: { nav: NavItem[]; stars: number }) {
   const { clear } = usePlatforms();
@@ -33,6 +65,9 @@ export function Header({ nav, stars }: { nav: NavItem[]; stars: number }) {
             </span>
           </a>
         </div>
+
+        <SkillBadge />
+
         <div className="flex items-center gap-1">
           <ThemeToggle />
           <Link
