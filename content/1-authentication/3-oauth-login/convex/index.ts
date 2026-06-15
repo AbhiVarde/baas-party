@@ -1,6 +1,6 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 
-function GoogleSignIn() {
+async function GoogleSignIn() {
   const { signIn } = useAuthActions();
 
   await signIn("google", {

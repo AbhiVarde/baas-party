@@ -6,8 +6,8 @@ const client = new Client()
 
 const account = new Account(client);
 
-account.createOAuth2Session(
-  OAuthProvider.Google,
-  "https://yourapp.com/auth/callback",
-  "https://yourapp.com/auth/failure",
-);
+account.createOAuth2Session({
+  provider: OAuthProvider.Google,
+  success: "https://yourapp.com/auth/callback",
+  failure: "https://yourapp.com/auth/failure",
+});

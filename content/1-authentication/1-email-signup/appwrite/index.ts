@@ -6,8 +6,8 @@ const client = new Client()
 
 const account = new Account(client);
 
-const user = await account.create(
-  ID.unique(),
-  "user@example.com",
-  "password123",
-);
+const user = await account.create({
+  userId: ID.unique(),
+  email: "user@example.com",
+  password: "password123",
+});

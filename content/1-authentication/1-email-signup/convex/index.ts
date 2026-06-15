@@ -1,6 +1,6 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 
-function SignUpForm() {
+async function SignUpForm() {
   const { signIn } = useAuthActions();
 
   await signIn("password", {

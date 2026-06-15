@@ -1,6 +1,6 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 
-function SignOutButton() {
+async function SignOutButton() {
   const { signOut } = useAuthActions();
 
   await signOut();
