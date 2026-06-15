@@ -7,6 +7,7 @@ import { Sidebar } from "@/components/nav";
 import { PlatformProvider } from "@/components/platform-context";
 import { getNav } from "@/lib/nav";
 import { getStarCount } from "@/lib/github";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -104,6 +105,7 @@ export default async function RootLayout({
             </PlatformProvider>
           </TooltipProvider>
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
