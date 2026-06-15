@@ -8,7 +8,12 @@ const client = new Client()
 const databases = new Databases(client);
 
 // collection-level permissions
-await databases.createCollection("main", "posts", "Posts", [
-  Permission.read(Role.user("user-123")),
-  Permission.write(Role.user("user-123")),
-]);
+await databases.createCollection({
+  databaseId: "main",
+  collectionId: "posts",
+  name: "Posts",
+  permissions: [
+    Permission.read(Role.user("user-123")),
+    Permission.write(Role.user("user-123")),
+  ],
+});

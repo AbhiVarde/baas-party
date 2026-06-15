@@ -5,9 +5,10 @@ export const getMyPosts = query({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthenticated");
 
+    // Optimized index search strategy
     return await ctx.db
       .query("posts")
-      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .withIndex("by_userId", (q) => q.eq("userId", identity.subject))
       .collect();
   },
 });

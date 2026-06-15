@@ -1,7 +1,11 @@
-import { Client } from "node-appwrite";
+export default async (context) => {
+  const { req, res, log } = context;
 
-export default async ({ req, res, log }) => {
-  const { name } = JSON.parse(req.body ?? "{}");
+  // Safe parsing that scales across both string and auto-parsed body configurations
+  const { name } =
+    typeof req.body === "string"
+      ? JSON.parse(req.body || "{}")
+      : (req.body ?? {});
 
   log(`Hello ${name}!`);
 
