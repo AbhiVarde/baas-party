@@ -4,13 +4,11 @@ import { v } from "convex/values";
 export const getPublishedPosts = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
+    // Requires an explicit index mapping defined inside your convex/schema file
     return await ctx.db
       .query("posts")
-      .filter((q) =>
-        q.and(
-          q.eq(q.field("userId"), args.userId),
-          q.eq(q.field("published"), true),
-        ),
+      .withIndex("by_user_published", (q) =>
+        q.eq("userId", args.userId).eq("published", true),
       )
       .collect();
   },

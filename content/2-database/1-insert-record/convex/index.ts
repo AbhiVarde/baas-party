@@ -1,3 +1,4 @@
+// 🖥️ AFTER
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -7,11 +8,13 @@ export const insertPost = mutation({
     body: v.string(),
   },
   handler: async (ctx, args) => {
-    const userId = (await ctx.auth.getUserIdentity())?.subject;
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated"); // Protected
+
     return await ctx.db.insert("posts", {
       title: args.title,
       body: args.body,
-      userId,
+      userId: identity.subject,
     });
   },
 });
