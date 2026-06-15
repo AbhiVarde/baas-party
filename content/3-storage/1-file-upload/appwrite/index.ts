@@ -7,4 +7,8 @@ const client = new Client()
 const storage = new Storage(client);
 const file = new File(["hello"], "hello.txt", { type: "text/plain" });
 
-const result = await storage.createFile("uploads", ID.unique(), file);
+const result = await storage.createFile({
+  bucketId: "uploads",
+  fileId: ID.unique(),
+  file: file,
+});

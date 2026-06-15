@@ -6,8 +6,12 @@ const client = new Client()
 
 const storage = new Storage(client);
 
-// public preview url
-const url = storage.getFilePreview("uploads", "file-id");
+const url = storage.getFilePreview({
+  bucketId: "uploads",
+  fileId: "file-id",
+});
 
-// download url
-const downloadUrl = storage.getFileDownload("uploads", "file-id");
+const downloadUrl = storage.getFileDownload({
+  bucketId: "uploads",
+  fileId: "file-id",
+});
