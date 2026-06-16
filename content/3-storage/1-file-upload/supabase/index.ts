@@ -2,7 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_KEY!,
+  process.env.NEXT_SUPABASE_PUBLISHABLE_KEY!,
 );
 
 const file = new File(["hello"], "hello.txt", { type: "text/plain" });
