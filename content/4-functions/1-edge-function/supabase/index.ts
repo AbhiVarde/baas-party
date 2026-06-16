@@ -1,7 +1,11 @@
-Deno.serve(async (req) => {
-  const { name } = await req.json();
+import { withSupabase } from "npm:@supabase/server";
 
-  return new Response(JSON.stringify({ message: `Hello ${name}!` }), {
-    headers: { "Content-Type": "application/json" },
-  });
-});
+export default {
+  fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
+    const { name } = await req.json();
+
+    return Response.json({
+      message: `Hello ${name || ctx.user?.email || "world"}!`,
+    });
+  }),
+};
