@@ -4,7 +4,7 @@
 
 Compare how **Supabase**, **Appwrite**, and **Convex** handle the same backend tasks, side by side, with real code. Pick your platforms, see the syntax instantly.
 
-Live at **[baas-party.vercel.app](https://baas-party.vercel.app)**
+Live at **[baas.abhivarde.in](https://baas.abhivarde.in)**
 
 Inspired by [component-party.dev](https://component-party.dev) · Built by [abhivarde.in](https://abhivarde.in)
 
